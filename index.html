@@ -69,7 +69,8 @@
   </div>
 
   <!-- Auth Screen -->
-  <div class="auth-screen" id="authScreen">
+  <div class="auth-screen hidden" id="authScreen">
+    <button id="closeAuthBtn" style="position:absolute; top: 20px; right: 20px; background: none; border: none; font-size: 32px; color: white; cursor: pointer;">&times;</button>
     <div class="auth-card">
       <div class="auth-logo">
         <div class="logo-icon">
@@ -96,7 +97,7 @@
   </div>
 
   <!-- Sidebar Navigation -->
-  <aside class="sidebar" id="sidebar" style="display: none;">
+  <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="logo">
         <div class="logo-icon">
@@ -210,7 +211,7 @@
   </aside>
 
   <!-- Main Content -->
-  <main class="main-content" id="mainContent" style="display: none;">
+  <main class="main-content" id="mainContent">
     <!-- Top Bar -->
     <header class="topbar">
       <div class="topbar-left">

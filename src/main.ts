@@ -48,23 +48,64 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const closeAuthBtn = document.getElementById("closeAuthBtn");
+  if(closeAuthBtn) {
+    closeAuthBtn.addEventListener("click", () => {
+      document.getElementById('authScreen')?.classList.add('hidden');
+    });
+  }
+
+  const userAvatar = document.getElementById("userAvatar");
+  if (userAvatar) {
+    userAvatar.addEventListener("click", () => {
+      if (CURRENT_USER_ID && CURRENT_USER_ID.startsWith("usr_") === false) {
+        if(confirm("Log out of your Google account?")) {
+           auth.signOut();
+        }
+      } else {
+        document.getElementById('authScreen')?.classList.remove('hidden');
+      }
+    });
+  }
+
   onAuthStateChanged(auth, (user) => {
     if (user) {
       CURRENT_USER_ID = user.uid;
       localStorage.setItem('nutrijj_user_id', CURRENT_USER_ID);
       document.getElementById('authScreen')?.classList.add('hidden');
-      const sb = document.getElementById('sidebar');
-      if (sb) sb.style.display = 'flex';
-      const mc = document.getElementById('mainContent');
-      if (mc) mc.style.display = 'flex';
+      // Visual indicator
+      if(userAvatar) userAvatar.innerHTML = `<span>${user.email?.charAt(0).toUpperCase() || 'U'}</span>`;
+      
+      const toast = document.getElementById('xpToast');
+      if (toast && !toast.classList.contains('show')) {
+        toast.innerHTML = `Signed in as ${user.email}`;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      }
     } else {
-      document.getElementById('authScreen')?.classList.remove('hidden');
-      const sb = document.getElementById('sidebar');
-      if (sb) sb.style.display = 'none';
-      const mc = document.getElementById('mainContent');
-      if (mc) mc.style.display = 'none';
+      // Revert to local anonymous tracking
+      const tempId = 'usr_' + Math.random().toString(36).substring(2, 9);
+      CURRENT_USER_ID = localStorage.getItem('nutrijj_user_id')?.startsWith('usr_') ? localStorage.getItem('nutrijj_user_id')! : tempId;
+      localStorage.setItem('nutrijj_user_id', CURRENT_USER_ID);
+      if(userAvatar) userAvatar.innerHTML = `<span>JJ</span>`;
+      document.getElementById('authScreen')?.classList.add('hidden');
     }
   });
+
+  // Profile nav item click handling
+  setTimeout(() => {
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        const page = item.getAttribute('data-page');
+        if (page === 'profile') {
+          if (CURRENT_USER_ID.startsWith("usr_")) {
+             e.preventDefault();
+             document.getElementById('authScreen')?.classList.remove('hidden');
+          }
+        }
+      });
+    });
+  }, 1000);
 });
 
 let currentParty: any = null;
