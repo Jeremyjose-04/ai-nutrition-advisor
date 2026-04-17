@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NutriJJ — Smart AI Nutrition Advisor</title>
+  <meta name="description"
+    content="NutriJJ — Hyper-personalized AI nutrition advisor that analyzes wearable data, fitness goals, and metabolic patterns to deliver optimized meal recommendations." />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains; preload">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https:; frame-src https://www.openstreetmap.org; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta http-equiv="Permissions-Policy"
+    content="camera=(), microphone=(), payment=(), magnetometer=(), gyroscope=(), accelerometer=()">
+  <meta http-equiv="X-Permitted-Cross-Domain-Policies" content="none">
+  <meta http-equiv="X-DNS-Prefetch-Control" content="on">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><path d='M 12 60 Q 60 78 108 60 C 108 102 84 114 60 114 C 36 114 12 102 12 60 Z' fill='%2310b981'/><path d='M 36 42 Q 45 24 33 9 M 60 48 Q 69 24 57 6 M 84 42 Q 93 24 81 9' stroke='%2310b981' stroke-width='6' stroke-linecap='round' fill='none'/><text x='60' y='96' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='32' fill='white'>JJ</text></svg>">
+</head>
+
+<body>
+  <!-- Preloader -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-content">
+      <div class="preloader-logo">
+        <svg class="preloader-plate" viewBox="0 0 120 120" width="100" height="100">
+          <circle class="preloader-ring" cx="60" cy="60" r="56" fill="none" stroke="url(#preGradient)" stroke-width="3"
+            stroke-dasharray="351" stroke-dashoffset="351" stroke-linecap="round" />
+          <path d="M 12 60 Q 60 78 108 60 C 108 102 84 114 60 114 C 36 114 12 102 12 60 Z" fill="url(#preGradient)"
+            opacity="0.15" />
+          <path d="M 12 60 Q 60 78 108 60 C 108 102 84 114 60 114 C 36 114 12 102 12 60 Z" stroke="url(#preGradient)"
+            stroke-width="3" stroke-linecap="round" fill="none" />
+          <path d="M 36 42 Q 45 24 33 9 M 60 48 Q 69 24 57 6 M 84 42 Q 93 24 81 9" stroke="url(#preGradient)"
+            stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.6" />
+          <text x="60" y="96" text-anchor="middle" font-family="Outfit" font-weight="800" font-size="28"
+            fill="url(#preGradient)">JJ</text>
+          <defs>
+            <linearGradient id="preGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#10b981" />
+              <stop offset="100%" stop-color="#06b6d4" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="preloader-orbit">
+          <div class="orbit-item oi-1">🥑</div>
+          <div class="orbit-item oi-2">🫐</div>
+          <div class="orbit-item oi-3">🍗</div>
+          <div class="orbit-item oi-4">🥗</div>
+        </div>
+      </div>
+      <h1 class="preloader-title">NutriJJ</h1>
+      <p class="preloader-sub" id="preloaderStatus">Evaluating nutrition profiles...</p>
+      <div class="preloader-progress">
+        <div class="preloader-progress-bar" id="preloaderBar"></div>
+      </div>
+      <span class="preloader-pct" id="preloaderPct">0%</span>
+      <div class="preloader-tips">
+        <span id="preloaderTip">Did you know? Avocados contain 20+ vitamins and minerals.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+            <!-- Bowl Shape -->
+            <path d="M 4 20 Q 20 26 36 20 C 36 34 28 38 20 38 C 12 38 4 34 4 20 Z" fill="url(#logoGrad)"
+              opacity="0.15" />
+            <path d="M 4 20 Q 20 26 36 20 C 36 34 28 38 20 38 C 12 38 4 34 4 20 Z" stroke="url(#logoGrad)"
+              stroke-width="2.5" stroke-linecap="round" fill="none" />
+            <!-- Steam -->
+            <path d="M 12 14 Q 15 8 11 3 M 20 16 Q 23 8 19 2 M 28 14 Q 31 8 27 3" stroke="url(#logoGrad)"
+              stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6" />
+            <!-- JJ Text -->
+            <text x="20" y="33" text-anchor="middle" font-family="Outfit" font-weight="800" font-size="13"
+              fill="url(#logoGrad)">JJ</text>
+            <defs>
+              <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#10b981" />
+                <stop offset="100%" stop-color="#06b6d4" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">NutriJJ</span>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#dashboard" class="nav-item active" data-page="dashboard">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+          <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+          <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+          <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="#meals" class="nav-item" data-page="meals">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2"></path>
+          <path d="M7 2v20"></path>
+          <path d="M21 15V2a5 5 0 00-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"></path>
+        </svg>
+        <span>Meal Plans</span>
+      </a>
+
+      <a href="#pantry" class="nav-item" data-page="pantry">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 8L18.74 5.74A9.75 9.75 0 0012 3a9.75 9.75 0 00-6.74 2.74L3 8"></path>
+          <rect x="3" y="8" width="18" height="13" rx="2"></rect>
+          <path d="M12 12v4"></path>
+          <path d="M10 14h4"></path>
+        </svg>
+        <span>Pantry</span>
+      </a>
+      <a href="#scan" class="nav-item" data-page="scan">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <circle cx="12" cy="12" r="4"></circle>
+          <line x1="21.17" y1="8" x2="12" y2="8"></line>
+          <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
+          <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+        </svg>
+        <span>Scan Food</span>
+      </a>
+      <a href="#challenge" class="nav-item" data-page="challenge">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9H4.5a2.5 2.5 0 010-5H6"></path>
+          <path d="M18 9h1.5a2.5 2.5 0 000-5H18"></path>
+          <path d="M4 22h16"></path>
+          <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+          <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+          <path d="M18 2H6v7a6 6 0 0012 0V2z"></path>
+        </svg>
+        <span>Challenge</span>
+      </a>
+      <a href="#community" class="nav-item" data-page="community">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span>Community</span>
+      </a>
+      <a href="#profile" class="nav-item" data-page="profile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="5"></circle>
+          <path d="M20 21a8 8 0 00-16 0"></path>
+        </svg>
+        <span>Profile</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sync-status">
+        <div class="sync-dot"></div>
+        <span>Devices synced</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <div class="search-bar" style="position: relative;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" placeholder="Search meals, insights, or type 'Action'..." id="searchInput"
+            autocomplete="off">
+          <div class="search-dropdown" id="searchDropdown"></div>
+        </div>
+      </div>
+      <!-- Player HUD (redesigned v3) -->
+      <div class="player-hud">
+        <div class="hud-chip hud-streak-chip" title="Active Roadmap">
+          <span class="hud-num" id="hudRoadmapDay">Day 1 / 90</span>
+        </div>
+        <div class="hud-chip hud-xp-chip" title="Current Points">
+          <span class="hud-num" id="hudPoints">1,250 pts</span>
+        </div>
+        <div class="hud-chip hud-dms-chip" title="Friends Online">
+          <span class="hud-num" id="hudFriendsOnline">5 Online</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+        <button class="notification-btn" id="notifBtn" aria-label="Notifications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span class="notif-badge">3</span>
+        </button>
+        <button class="header-device-btn" id="headerDeviceBtn" aria-label="Connected Devices">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6.5 6.5l11 11L12 23V1l5.5 5.5-11 11"></path>
+          </svg>
+        </button>
+        <div class="user-avatar" id="userAvatar"><span>JJ</span></div>
+      </div>
+    </header>
+
+    <!-- Page Sections -->
+    <!-- ========== DASHBOARD ========== -->
+    <section class="page active" id="page-dashboard">
+      <!-- Gamified Hero Banner -->
+      <div class="dash-hero-banner">
+        <div class="dash-hero-left">
+          <h1 class="dash-hero-title">Welcome back, <span class="hero-name">Jeremy</span> ⚡</h1>
+          <p class="dash-hero-sub">Your metabolic engine is running <strong id="heroStateDesc">elite-level</strong>
+            today. Keep pushing.
+          </p>
+          <div class="dash-hero-stats">
+            <div class="hero-stat"><svg viewBox="0 0 24 24" width="16" height="16" fill="#f59e0b" stroke="none">
+                <path d="M12 2C8 6 4 9.5 4 13a8 8 0 0016 0c0-3.5-4-7-8-11z" />
+              </svg><span class="hero-stat-val" id="heroStreakDisplay">8-day streak</span></div>
+            <div class="hero-stat"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#06b6d4"
+                stroke-width="2">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg><span class="hero-stat-val" id="heroLevelDisplay">Lv. 52 · Macro Master</span></div>
+            <div class="hero-stat" id="heroTierContainer"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                stroke="#10b981" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg><span class="hero-stat-val" id="heroTierDisplay">💎 Platinum · DMS 88</span></div>
+          </div>
+        </div>
+        <div class="dash-hero-right">
+          <span class="hero-date" id="dateDisplay"></span>
+        </div>
+      </div>
+
+
+      <!-- Health Metric Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card" data-type="heart">
+          <div class="metric-icon heart-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+              </path>
+            </svg>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Heart Rate</span>
+            <span class="metric-value" id="heartRate">--</span>
+            <span class="metric-unit">BPM</span>
+          </div>
+          <canvas class="sparkline" id="sparkHeart" width="80" height="30"></canvas>
+        </div>
+        <div class="metric-card" data-type="calories">
+          <div class="metric-icon cal-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z">
+              </path>
+            </svg>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Calories Burned</span>
+            <span class="metric-value" id="caloriesBurned">--</span>
+            <span class="metric-unit">kcal</span>
+          </div>
+          <canvas class="sparkline" id="sparkCalories" width="80" height="30"></canvas>
+        </div>
+        <div class="metric-card" data-type="steps">
+          <div class="metric-icon steps-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path>
+              <path d="M17 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path>
+              <path d="M7 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path>
+              <path d="M12 18a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path>
+            </svg>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Steps</span>
+            <span class="metric-value" id="steps">--</span>
+            <span class="metric-unit">steps</span>
+          </div>
+          <canvas class="sparkline" id="sparkSteps" width="80" height="30"></canvas>
+        </div>
+        <div class="metric-card" data-type="sleep">
+          <div class="metric-icon sleep-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Sleep Score</span>
+            <span class="metric-value" id="sleepScore">--</span>
+            <span class="metric-unit">/100</span>
+          </div>
+          <canvas class="sparkline" id="sparkSleep" width="80" height="30"></canvas>
+        </div>
+        <div class="metric-card" data-type="hrv">
+          <div class="metric-icon hrv-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">HRV</span>
+            <span class="metric-value" id="hrv">--</span>
+            <span class="metric-unit">ms</span>
+          </div>
+          <canvas class="sparkline" id="sparkHRV" width="80" height="30"></canvas>
+        </div>
+        <div class="metric-card" data-type="active">
+          <div class="metric-icon active-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Active Minutes</span>
+            <span class="metric-value" id="activeMin">--</span>
+            <span class="metric-unit">min</span>
+          </div>
+          <canvas class="sparkline" id="sparkActive" width="80" height="30"></canvas>
+        </div>
+      </div>
+
+      <!-- XP Toast (animated popup) -->
+      <div class="xp-toast" id="xpToast">+100 XP 🎉</div>
+
+      <div class="dashboard-split-row">
+
+        <!-- Daily Quests (redesigned) -->
+        <div class="daily-quests-card glass-card">
+          <div class="dq-header">
+            <div class="dq-title-group">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#f59e0b" stroke-width="2">
+                <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+              </svg>
+              <h3 class="dq-title">Daily Tasks - Day 1</h3>
+            </div>
+            <div class="dq-progress-group">
+              <div class="dq-progress-ring">
+                <svg viewBox="0 0 36 36" width="36" height="36">
+                  <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3" />
+                  <circle cx="18" cy="18" r="15" fill="none" stroke="url(#dqGrad)" stroke-width="3"
+                    stroke-linecap="round" stroke-dasharray="94.2" stroke-dashoffset="37.7"
+                    transform="rotate(-90 18 18)" />
+                  <defs>
+                    <linearGradient id="dqGrad">
+                      <stop offset="0%" stop-color="#10b981" />
+                      <stop offset="100%" stop-color="#06b6d4" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <span class="dq-ring-text">3/5</span>
+              </div>
+              <span class="dq-xp-earned">225 XP</span>
+            </div>
+          </div>
+          <div class="dq-grid" id="questsList">
+            <!-- Quest 1: Protein -->
+            <div class="dq-item dq-done" data-xp="100">
+              <div class="dq-icon" style="--dq-color:#f59e0b;--dq-bg:rgba(245,158,11,0.1)">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#f59e0b" stroke-width="2">
+                  <path d="M12 2C8 6 4 9.5 4 13a8 8 0 0016 0c0-3.5-4-7-8-11z" />
+                </svg>
+              </div>
+              <div class="dq-body">
+                <span class="dq-name">Hit Protein Target</span>
+                <div class="dq-bar">
+                  <div class="dq-fill" style="width:100%;--dq-color:#f59e0b"></div>
+                </div>
+              </div>
+              <span class="dq-xp" style="--dq-color:#f59e0b">+100</span>
+              <div class="dq-check-done">✓</div>
+            </div>
+            <!-- Quest 2: Water -->
+            <div class="dq-item dq-done" data-xp="75">
+              <div class="dq-icon" style="--dq-color:#06b6d4;--dq-bg:rgba(6,182,212,0.1)">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#06b6d4" stroke-width="2">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z" />
+                </svg>
+              </div>
+              <div class="dq-body">
+                <span class="dq-name">Log 8 Glasses of Water</span>
+                <div class="dq-bar">
+                  <div class="dq-fill" style="width:100%;--dq-color:#06b6d4"></div>
+                </div>
+              </div>
+              <span class="dq-xp" style="--dq-color:#06b6d4">+75</span>
+              <div class="dq-check-done">✓</div>
+            </div>
+            <!-- Quest 3: Meals -->
+            <div class="dq-item dq-done" data-xp="50">
+              <div class="dq-icon" style="--dq-color:#8b5cf6;--dq-bg:rgba(139,92,246,0.1)">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#8b5cf6" stroke-width="2">
+                  <path d="M18 8h1a4 4 0 010 8h-1" />
+                  <path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z" />
+                  <line x1="6" y1="1" x2="6" y2="4" />
+                  <line x1="10" y1="1" x2="10" y2="4" />
+                  <line x1="14" y1="1" x2="14" y2="4" />
+                </svg>
+              </div>
+              <div class="dq-body">
+                <span class="dq-name">Log All 3 Meals</span>
+                <div class="dq-bar">
+                  <div class="dq-fill" style="width:100%;--dq-color:#8b5cf6"></div>
+                </div>
+              </div>
+              <span class="dq-xp" style="--dq-color:#8b5cf6">+50</span>
+              <div class="dq-check-done">✓</div>
+            </div>
+            <!-- Quest 4: Steps (in progress) -->
+            <div class="dq-item" data-xp="150">
+              <div class="dq-icon" style="--dq-color:#10b981;--dq-bg:rgba(16,185,129,0.1)">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#10b981" stroke-width="2">
+                  <path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5V16" />
+                  <path d="M20 20v-2.38c0-2.12 1-3.12 1-5.62 0-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5V20" />
+                </svg>
+              </div>
+              <div class="dq-body">
+                <span class="dq-name">Walk 8,000 Steps</span>
+                <div class="dq-bar">
+                  <div class="dq-fill" style="width:68%;--dq-color:#10b981"></div>
+                </div>
+              </div>
+              <span class="dq-xp" style="--dq-color:#10b981">+150</span>
+              <span class="dq-pct">68%</span>
+            </div>
+            <!-- Quest 5: DMS (in progress) -->
+            <div class="dq-item" data-xp="200">
+              <div class="dq-icon" style="--dq-color:#f43f5e;--dq-bg:rgba(244,63,94,0.1)">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#f43f5e" stroke-width="2">
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+              </div>
+              <div class="dq-body">
+                <span class="dq-name">Score DMS &gt; 90</span>
+                <div class="dq-bar">
+                  <div class="dq-fill" style="width:88%;--dq-color:#f43f5e"></div>
+                </div>
+              </div>
+              <span class="dq-xp" style="--dq-color:#f43f5e">+200</span>
+              <span class="dq-pct">88%</span>
+            </div>
+          </div>
+          <div class="dq-footer">
+            <div class="dq-total-bar">
+              <div class="dq-total-fill" style="width:60%"></div>
+            </div>
+            <div class="dq-footer-text">
+              <span class="dq-earned-label">225 / 575 XP</span>
+              <span class="dq-bonus">Complete all → <strong>+500 Bonus XP</strong> 🏆</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-card glass-card">
+        <div class="chart-header">
+          <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+              <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+              <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+            </svg>Macronutrient Distribution</h3>
+          <span class="chart-badge">Today</span>
+        </div>
+        <div class="chart-container doughnut-container">
+          <canvas id="macroChart"></canvas>
+          <div class="macro-center">
+            <span class="macro-total" id="macroTotal">2,180</span>
+            <span class="macro-label">kcal</span>
+          </div>
+        </div>
+        <div class="macro-legend">
+          <div class="legend-item"><span class="legend-dot protein"></span>Protein <strong id="proteinG">142g</strong>
+          </div>
+          <div class="legend-item"><span class="legend-dot carbs"></span>Carbs <strong id="carbsG">245g</strong></div>
+          <div class="legend-item"><span class="legend-dot fat"></span>Fat <strong id="fatG">72g</strong></div>
+        </div>
+      </div>
+
+      </div>
+
+      <!-- Water Intake, Metabolic Score, and Today's Meal Plan -->
+      <div class="dashboard-tri-row">
+        <div class="water-card glass-card">
+          <div class="chart-header">
+            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                <path
+                  d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z">
+                </path>
+              </svg>Water Intake</h3>
+            <span class="chart-badge" id="waterBadge">0 / 8 glasses</span>
+          </div>
+          <div class="water-visual">
+            <div class="water-bottle">
+              <div class="water-fill" id="waterFill" style="height: 0%"></div>
+              <div class="water-level-marks">
+                <span>8</span><span>6</span><span>4</span><span>2</span>
+              </div>
+            </div>
+            <div class="water-controls">
+              <div class="water-amount">
+                <span class="water-current" id="waterCurrent">0</span>
+                <span class="water-unit">/ 2.0 L</span>
+              </div>
+              <div class="water-btns">
+                <button class="water-btn" onclick="window.addWater(150)">🥤 150ml</button>
+                <button class="water-btn" onclick="window.addWater(250)">💧 250ml</button>
+                <button class="water-btn" onclick="window.addWater(500)">🍶 500ml</button>
+              </div>
+              <button class="water-btn water-reset" onclick="window.resetWater()">↻ Reset</button>
+              <div class="water-history">
+                <span class="water-log-title">Today's Log</span>
+                <div class="water-log" id="waterLog"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="metabolic-card glass-card">
+          <div class="chart-header">
+            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>Metabolic Score</h3>
+            <span class="chart-badge ai-badge">AI Predictive</span>
+          </div>
+          <div class="metabolic-gauge">
+            <svg viewBox="0 0 200 200" class="gauge-svg">
+              <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12" />
+              <circle cx="100" cy="100" r="85" fill="none" stroke="url(#gaugeGradient)" stroke-width="12"
+                stroke-linecap="round" stroke-dasharray="534" stroke-dashoffset="534" id="gaugeArc"
+                transform="rotate(-90 100 100)" />
+              <defs>
+                <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#10b981" />
+                  <stop offset="50%" stop-color="#06d6a0" />
+                  <stop offset="100%" stop-color="#00e5ff" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="gauge-value">
+              <span class="gauge-number" id="metabolicScore">0</span>
+              <span class="gauge-label">out of 100</span>
+            </div>
+          </div>
+          <div class="metabolic-details">
+            <div class="detail-row"><span>Recovery</span>
+              <div class="detail-bar">
+                <div class="detail-fill" style="width:82%;background:var(--emerald)"></div>
+              </div><span>82%</span>
+            </div>
+            <div class="detail-row"><span>Energy</span>
+              <div class="detail-bar">
+                <div class="detail-fill" style="width:74%;background:var(--cyan)"></div>
+              </div><span>74%</span>
+            </div>
+            <div class="detail-row"><span>Nutrition</span>
+              <div class="detail-bar">
+                <div class="detail-fill" style="width:91%;background:var(--teal)"></div>
+              </div><span>91%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-card glass-card">
+          <div class="chart-header">
+            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>Today's Meal Plan</h3>
+            <span class="chart-badge" id="mealPlanBadge">4 meals</span>
+          </div>
+          <div class="meal-timeline" id="mealTimeline">
+            <!-- Populated by JS -->
+          </div>
+          <button class="btn-small btn-customize" id="customizeMealPlanBtn" style="margin-top:8px;margin-bottom:0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+            Customize Plan
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========== MEALS ========== -->
+    <section class="page" id="page-meals">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">AI Meal Recommendations</h1>
+          <p class="page-subtitle">Personalized nutrition powered by your health data</p>
+        </div>
+      </div>
+
+      <!-- Geographic Location Selector -->
+      <div class="geo-section glass-card">
+        <div class="chart-header">
+          <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>Select Your Region</h3>
+          <span class="chart-badge ai-badge">Cuisine-Based AI</span>
+        </div>
+        <p class="geo-subtitle">Meal suggestions are tailored to popular dishes in your selected region</p>
+        <div class="geo-layout">
+          <div class="geo-map-container">
+            <iframe id="geoMapFrame" width="100%" height="280" style="border:none; border-radius:12px;" loading="lazy"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=-180%2C-60%2C180%2C80&layer=mapnik">
+            </iframe>
+            <div class="geo-actions">
+              <button class="btn-primary btn-geo" id="detectLocationBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="3" />
+                  <line x1="12" y1="2" x2="12" y2="6" />
+                  <line x1="12" y1="18" x2="12" y2="22" />
+                  <line x1="2" y1="12" x2="6" y2="12" />
+                  <line x1="18" y1="12" x2="22" y2="12" />
+                </svg>
+                Use My Location
+              </button>
+            </div>
+          </div>
+          <div class="region-picker">
+            <div class="region-grid" id="regionGrid">
+              <button class="region-btn active" data-region="south-asian" data-lat="20" data-lon="78">
+                <span class="region-emoji"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg></span><span>South Asia</span>
+              </button>
+              <button class="region-btn" data-region="east-asian" data-lat="35" data-lon="105">
+                <span class="region-emoji"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg></span><span>East Asia</span>
+              </button>
+              <button class="region-btn" data-region="mediterranean" data-lat="41" data-lon="15">
+                <span class="region-emoji"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg></span><span>Mediterranean</span>
+              </button>
+              <button class="region-btn" data-region="american" data-lat="39" data-lon="-98">
+                <span class="region-emoji"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg></span><span>American</span>
+              </button>
+              <button class="region-btn" data-region="middle-eastern" data-lat="25" data-lon="45">
+                <span class="region-emoji"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg></span><span>Middle Eastern</span>
+              </button>
+              <button class="region-btn" data-region="african" data-lat="0" data-lon="25">
+                <span class="region-emoji"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg></span><span>African</span>
+              </button>
+              <button class="region-btn" data-region="latin" data-lat="-15" data-lon="-55">
+                <span class="region-emoji"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg></span><span>Latin American</span>
+              </button>
+              <button class="region-btn" data-region="european" data-lat="48" data-lon="2">
+                <span class="region-emoji"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg></span><span>European</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Regional Meal Suggestions -->
+      <div class="regional-meals-section">
+        <div class="chart-header">
+          <h3 id="regionalMealsTitle"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              style="margin-right: 6px; vertical-align: bottom;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+              <path d="M2 12h20"></path>
+            </svg>Popular in South Asia</h3>
+          <span class="chart-badge" id="regionalMealCount">6 dishes</span>
+        </div>
+        <div class="meals-grid" id="regionalMealsGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="section-divider"></div>
+      <div class="chart-header" style="margin-bottom:16px">
+        <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+            <line x1="12" y1="2" x2="12" y2="6"></line>
+            <line x1="12" y1="18" x2="12" y2="22"></line>
+            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+            <line x1="2" y1="12" x2="6" y2="12"></line>
+            <line x1="18" y1="12" x2="22" y2="12"></line>
+            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+          </svg>AI Personalized Recommendations</h3>
+      </div>
+      <div class="filter-bar glass-card">
+        <div class="filter-group">
+          <label>Diet</label>
+          <select id="filterDiet">
+            <option value="all">All Diets</option>
+            <option value="balanced">Balanced</option>
+            <option value="keto">Keto</option>
+            <option value="vegan">Vegan</option>
+            <option value="paleo">Paleo</option>
+            <option value="mediterranean">Mediterranean</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Meal Type</label>
+          <select id="filterMealType">
+            <option value="all">All Types</option>
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snack</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Max Prep Time</label>
+          <select id="filterPrepTime">
+            <option value="all">Any</option>
+            <option value="15">Under 15 min</option>
+            <option value="30">Under 30 min</option>
+            <option value="60">Under 1 hour</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Budget</label>
+          <select id="filterBudget">
+            <option value="all">Any Budget</option>
+            <option value="low">$ Budget</option>
+            <option value="mid">$$ Moderate</option>
+            <option value="high">$$$ Premium</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Meal Timing Suggestions -->
+      <div class="timing-bar glass-card">
+        <div class="timing-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg></div>
+        <div class="timing-info">
+          <strong>AI Timing Suggestion:</strong>
+          <span id="timingSuggestion">Based on your workout at 6:00 PM, have a protein-rich meal within the next 45
+            minutes for optimal recovery.</span>
+        </div>
+      </div>
+
+      <!-- Meal Cards Grid -->
+      <div class="meals-grid" id="mealsGrid">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+
+    <!-- ========== PANTRY ========== -->
+    <section class="page" id="page-pantry">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Pantry & Grocery</h1>
+          <p class="page-subtitle">Smart kitchen management & budget optimization</p>
+        </div>
+        <button class="btn-primary" id="addPantryBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Add Item
+        </button>
+      </div>
+
+      <div class="pantry-layout">
+        <!-- Pantry Inventory -->
+        <div class="pantry-inventory glass-card">
+          <div class="chart-header">
+            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>Pantry Inventory</h3>
+            <div class="pantry-tabs">
+              <button class="pantry-tab active" data-cat="all">All</button>
+              <button class="pantry-tab" data-cat="protein">Protein</button>
+              <button class="pantry-tab" data-cat="produce">Produce</button>
+              <button class="pantry-tab" data-cat="grains">Grains</button>
+              <button class="pantry-tab" data-cat="dairy">Dairy</button>
+            </div>
+          </div>
+          <div class="pantry-list" id="pantryList">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <div class="pantry-side">
+          <!-- Expiring Soon -->
+          <div class="expiry-card glass-card">
+            <div class="chart-header">
+              <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                  </path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>Expiring Soon</h3>
+            </div>
+            <div class="expiry-list" id="expiryList">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Smart Grocery List -->
+          <div class="grocery-card glass-card">
+            <div class="chart-header">
+              <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>Smart Grocery List</h3>
+              <span class="chart-badge ai-badge">AI Suggested</span>
+            </div>
+            <div class="grocery-list" id="groceryList">
+              <!-- Populated by JS -->
+            </div>
+            <div class="budget-summary">
+              <div class="budget-row">
+                <span>Estimated Weekly Cost</span>
+                <strong id="weeklyCost">$67.50</strong>
+              </div>
+              <div class="budget-row savings">
+                <span>AI Optimization Savings</span>
+                <strong id="savingsAmount">-$12.30</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== PROFILE ========== -->
+    <section class="page" id="page-profile">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Profile & Settings</h1>
+          <p class="page-subtitle">Customize your health journey</p>
+        </div>
+      </div>
+
+      <div class="profile-layout">
+        <!-- User Profile Card -->
+        <div class="profile-card glass-card">
+          <div class="profile-avatar-large">
+            <span>JJ</span>
+          </div>
+          <h2 class="profile-name">Jeremy Jose</h2>
+          <p class="profile-role">Premium Member</p>
+          <div class="profile-stats">
+            <div class="pstat"><span class="pstat-value">156</span><span class="pstat-label">Days Active</span></div>
+            <div class="pstat"><span class="pstat-value">42</span><span class="pstat-label">Meals Logged</span></div>
+            <div class="pstat"><span class="pstat-value">87</span><span class="pstat-label">Health Score</span></div>
+          </div>
+          <div class="profile-tags">
+            <span class="tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;">
+                <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
+                <path d="M12 12v9"></path>
+                <path d="m8 17 4 4 4-4"></path>
+              </svg> Muscle Gain</span>
+            <span class="tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+              </svg> High Protein</span>
+            <span class="tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+              </svg> Nut-Free</span>
+          </div>
+        </div>
+
+        <div class="profile-settings">
+          <!-- Goal Settings -->
+          <div class="settings-section glass-card">
+            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="6"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+              </svg>Fitness Goals</h3>
+            <div class="setting-row">
+              <label>Target Weight</label>
+              <div class="slider-group">
+                <input type="range" min="50" max="120" value="78" id="targetWeight">
+                <span class="slider-value" id="targetWeightVal">78 kg</span>
+              </div>
+            </div>
+            <div class="setting-row">
+              <label>Activity Level</label>
+              <div class="slider-group">
+                <input type="range" min="1" max="5" value="4" id="activityLevel">
+                <span class="slider-value" id="activityLevelVal">Very Active</span>
+              </div>
+            </div>
+            <div class="setting-row">
+              <label>Daily Calorie Target</label>
+              <div class="slider-group">
+                <input type="range" min="1200" max="4000" value="2400" step="50" id="calorieTarget">
+                <span class="slider-value" id="calorieTargetVal">2,400 kcal</span>
+              </div>
+            </div>
+            <div class="macro-sliders">
+              <h4>Macro Split</h4>
+              <div class="setting-row">
+                <label>Protein</label>
+                <div class="slider-group">
+                  <input type="range" min="10" max="60" value="35" id="proteinPct">
+                  <span class="slider-value" id="proteinPctVal">35%</span>
+                </div>
+              </div>
+              <div class="setting-row">
+                <label>Carbs</label>
+                <div class="slider-group">
+                  <input type="range" min="10" max="60" value="40" id="carbsPct">
+                  <span class="slider-value" id="carbsPctVal">40%</span>
+                </div>
+              </div>
+              <div class="setting-row">
+                <label>Fat</label>
+                <div class="slider-group">
+                  <input type="range" min="10" max="60" value="25" id="fatPct">
+                  <span class="slider-value" id="fatPctVal">25%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Wearable Connections -->
+          <div class="settings-section glass-card">
+            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+              </svg>Wearable Connections</h3>
+            <div class="connection-row">
+              <div class="connection-info"><span class="connection-icon"><svg width="18" height="18" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="6" y="5" width="12" height="14" rx="2" ry="2"></rect>
+                    <polyline points="16 5 16 2 8 2 8 5"></polyline>
+                    <polyline points="8 19 8 22 16 22 16 19"></polyline>
+                  </svg></span><span>Fitbit Sense 2</span></div>
+              <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="connection-row">
+              <div class="connection-info"><span class="connection-icon"><svg width="18" height="18" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                  </svg></span><span>Apple Health</span></div>
+              <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="connection-row">
+              <div class="connection-info"><span class="connection-icon"><svg width="18" height="18" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="6" y="5" width="12" height="14" rx="2" ry="2"></rect>
+                    <polyline points="16 5 16 2 8 2 8 5"></polyline>
+                    <polyline points="8 19 8 22 16 22 16 19"></polyline>
+                  </svg></span><span>Garmin Connect</span></div>
+              <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="connection-row">
+              <div class="connection-info"><span class="connection-icon"><svg width="18" height="18" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18v12H3z"></path>
+                    <path d="M12 9v2"></path>
+                    <circle cx="12" cy="13" r="2"></circle>
+                  </svg></span><span>Withings Scale</span></div>
+              <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+
+          <!-- Notifications -->
+          <div class="settings-section glass-card">
+            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>Notifications</h3>
+            <div class="connection-row">
+              <div class="connection-info"><span>Meal Reminders</span></div>
+              <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="connection-row">
+              <div class="connection-info"><span>Weekly Reports</span></div>
+              <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="connection-row">
+              <div class="connection-info"><span>Pantry Expiry Alerts</span></div>
+              <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="connection-row">
+              <div class="connection-info"><span>AI Insights</span></div>
+              <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+
+          <button class="btn-primary btn-wide" id="exportDataBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Export Health Data
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SCAN FOOD ========== -->
+    <section class="page" id="page-scan">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              style="margin-right: 8px; vertical-align: bottom;">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+              <circle cx="12" cy="13" r="4"></circle>
+            </svg>Scan Your Food</h1>
+          <p class="page-subtitle">Take a photo or upload an image — NutriJJ AI will analyze the nutrition content</p>
+        </div>
+      </div>
+
+      <div class="scan-layout">
+        <!-- Camera / Upload Area -->
+        <div class="scan-capture-area glass-card">
+          <div class="scan-options">
+            <button class="scan-option-btn active" id="cameraOption">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                <circle cx="12" cy="13" r="4" />
+              </svg>
+              <span>Take Photo</span>
+            </button>
+            <button class="scan-option-btn" id="uploadOption">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              <span>Upload Photo</span>
+            </button>
+          </div>
+
+          <!-- Camera Preview -->
+          <div class="camera-container" id="cameraContainer">
+            <video id="cameraPreview" autoplay playsinline></video>
+            <canvas id="cameraCanvas" style="display:none"></canvas>
+            <div class="camera-viewfinder">
+              <div class="vf-corner vf-tl"></div>
+              <div class="vf-corner vf-tr"></div>
+              <div class="vf-corner vf-bl"></div>
+              <div class="vf-corner vf-br"></div>
+            </div>
+            <div class="camera-controls">
+              <button class="capture-btn" id="captureBtn" title="Capture Photo">
+                <div class="capture-btn-inner"></div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Upload Area -->
+          <div class="upload-container" id="uploadContainer" style="display:none">
+            <div class="upload-dropzone" id="uploadDropzone">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              <p>Drag & drop an image here</p>
+              <span>or</span>
+              <label class="upload-browse-btn" for="fileInput">Browse Files</label>
+              <input type="file" id="fileInput" accept="image/*" style="display:none">
+            </div>
+          </div>
+
+          <!-- Captured/Uploaded Image Preview -->
+          <div class="preview-container" id="previewContainer" style="display:none">
+            <img id="previewImage" alt="Food preview">
+            <div class="scan-weight-input">
+              <label for="foodWeightInput">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z" />
+                  <line x1="16" y1="8" x2="2" y2="22" />
+                  <line x1="17.5" y1="15" x2="9" y2="15" />
+                </svg>
+                Portion Weight (grams)
+              </label>
+              <div class="weight-input-row">
+                <input type="number" id="foodWeightInput" min="1" max="5000" value="100"
+                  placeholder="Enter weight in grams">
+                <span class="weight-unit">g</span>
+              </div>
+              <div class="weight-presets">
+                <button class="weight-preset-btn"
+                  onclick="document.getElementById('foodWeightInput').value='50'">50g</button>
+                <button class="weight-preset-btn active"
+                  onclick="document.getElementById('foodWeightInput').value='100'">100g</button>
+                <button class="weight-preset-btn"
+                  onclick="document.getElementById('foodWeightInput').value='150'">150g</button>
+                <button class="weight-preset-btn"
+                  onclick="document.getElementById('foodWeightInput').value='200'">200g</button>
+                <button class="weight-preset-btn"
+                  onclick="document.getElementById('foodWeightInput').value='300'">300g</button>
+                <button class="weight-preset-btn"
+                  onclick="document.getElementById('foodWeightInput').value='500'">500g</button>
+              </div>
+            </div>
+            <div class="preview-actions">
+              <button class="btn-primary" id="analyzeBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+                Analyze with NutriJJ AI
+              </button>
+              <button class="scan-retake-btn" id="retakeBtn">↻ Retake</button>
+            </div>
+          </div>
+
+          <!-- Loading State -->
+          <div class="scan-loading" id="scanLoading" style="display:none">
+            <div class="scan-spinner"></div>
+            <p>NutriJJ AI is analyzing your food...</p>
+            <span class="scan-loading-sub">Identifying ingredients & calculating nutrients</span>
+          </div>
+        </div>
+
+        <!-- Results + Device Panel -->
+        <div class="scan-results-panel" id="scanResultsPanel" style="display:none">
+          <!-- Identified Food -->
+          <div class="scan-food-card glass-card">
+            <div class="chart-header">
+              <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                  <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                  <path d="M7 2v20"></path>
+                  <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                </svg>Food Identified</h3>
+              <span class="chart-badge ai-badge">NutriJJ AI</span>
+            </div>
+            <div class="scan-food-name" id="scanFoodName">—</div>
+            <div class="scan-food-confidence">
+              <span>Confidence:</span>
+              <div class="confidence-bar">
+                <div class="confidence-fill" id="confidenceFill"></div>
+              </div>
+              <span class="confidence-pct" id="confidencePct">0%</span>
+            </div>
+          </div>
+
+          <!-- Nutrition Results -->
+          <div class="scan-nutrition-card glass-card">
+            <div class="chart-header">
+              <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>Nutrition Breakdown</h3>
+              <span class="chart-badge">Per Serving</span>
+            </div>
+            <div class="scan-macros-grid" id="scanMacrosGrid">
+              <div class="scan-macro cal"><span class="sm-val" id="scanCal">0</span><span
+                  class="sm-label">Calories</span><span class="sm-unit">kcal</span></div>
+              <div class="scan-macro prot"><span class="sm-val" id="scanProt">0g</span><span
+                  class="sm-label">Protein</span><span class="sm-unit">macro</span></div>
+              <div class="scan-macro carb"><span class="sm-val" id="scanCarb">0g</span><span
+                  class="sm-label">Carbs</span><span class="sm-unit">macro</span></div>
+              <div class="scan-macro fatt"><span class="sm-val" id="scanFat">0g</span><span
+                  class="sm-label">Fat</span><span class="sm-unit">macro</span></div>
+            </div>
+            <div class="scan-nutrients-detail" id="scanNutrientsDetail">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- AI Recommendation -->
+          <div class="scan-recommendation glass-card">
+            <div class="chart-header">
+              <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                  <path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"></path>
+                  <path d="M5 10h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2z"></path>
+                  <path d="M8 14h.01"></path>
+                  <path d="M16 14h.01"></path>
+                </svg>NutriJJ Recommendation</h3>
+            </div>
+            <p class="scan-rec-text" id="scanRecText">Analyze a food item to get personalized recommendations.</p>
+          </div>
+
+          <!-- Connected Device Data -->
+          <div class="scan-device-card glass-card">
+            <div class="chart-header">
+              <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                  <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                </svg>Connected Device Data</h3>
+              <span class="chart-badge" id="scanDeviceStatus">No device</span>
+            </div>
+            <div class="scan-device-metrics" id="scanDeviceMetrics">
+              <p class="no-device-msg">Connect a wearable device to see how this meal fits your daily activity and
+                health metrics.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CHALLENGE ========== -->
+    <section class="page" id="page-challenge">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              style="margin-right: 8px; vertical-align: bottom;">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>Challenge Time</h1>
+          <p class="page-subtitle">Set your target, get an AI-powered plan to achieve it</p>
+        </div>
+      </div>
+
+      <!-- Party Hub Section -->
+      <div id="partyHub" class="glass-card party-hub-container">
+        <div id="partyNoGroup" class="party-view">
+          <div class="party-hero">
+            <div class="party-hero-icon">⚔️</div>
+            <h3>Join a Party or Create Your Own</h3>
+            <p>Compete with friends on steps, calories, and sleep. Enter a code to join or start a new group.</p>
+          </div>
+          <div class="party-actions-row">
+            <div class="party-action-box">
+              <label>Join with Code</label>
+              <div class="party-input-group">
+                <input type="text" id="joinPartyCode" placeholder="6-digit code" maxlength="6">
+                <button class="btn-primary" onclick="window.joinPartyUI()">Join Party</button>
+              </div>
+            </div>
+            <div class="party-divider"><span>OR</span></div>
+            <div class="party-action-box">
+              <label>Start New Party</label>
+              <div class="party-input-group">
+                <input type="text" id="createPartyName" placeholder="Party name (e.g. Fit Fam)">
+                <button class="btn-secondary" onclick="window.createPartyUI()">Create</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="partyDashboard" class="party-view" style="display:none">
+          <div class="party-dash-header">
+            <div class="party-info-main">
+              <h2 id="partyDisplayName">Party Name</h2>
+              <div class="party-code-badge" onclick="window.copyPartyCode()">
+                Code: <strong id="partyDisplayCode">XXXXXX</strong>
+                <span class="copy-hint">Click to copy join link</span>
+              </div>
+            </div>
+            <button class="btn-small" onclick="window.leavePartyUI()">Leave Party</button>
+          </div>
+          
+          <div class="party-leaderboard-section">
+            <div class="leaderboard-tabs">
+              <button class="lb-tab active" onclick="window.switchLeaderboard('steps')">Steps</button>
+              <button class="lb-tab" onclick="window.switchLeaderboard('calories')">Calories</button>
+              <button class="lb-tab" onclick="window.switchLeaderboard('sleep')">Sleep</button>
+            </div>
+            <div class="leaderboard-list" id="partyLeaderboard">
+              <!-- Members rendered here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Roadmap Results (hidden until generated) -->
+      <div class="challenge-results" id="challengeResults" style="display:none">
+
+        <!-- Storyline Roadmap -->
+        <div class="roadmap-section glass-card" style="position: relative; overflow: hidden;">
+          <div class="chart-header" style="margin-bottom: 30px;">
+            <h3><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: bottom;">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>Your Epic Journey</h3>
+            <span class="chart-badge ai-badge">AI Storyteller Generated</span>
+          </div>
+
+          <div class="game-roadmap-container" id="gameRoadmapContainer">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Nearby Locations -->
+      <div class="nearby-section glass-card">
+        <div class="chart-header">
+          <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>Nearby Health Food & Grocery</h3>
+          <span class="chart-badge">Based on your location</span>
+        </div>
+        <div class="nearby-layout">
+          <div class="nearby-map" id="nearbyMap">
+            <iframe id="mapFrame" width="100%" height="350" style="border:none; border-radius:12px;" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=-73.9957%2C40.7484%2C-73.9757%2C40.7584&layer=mapnik&marker=40.7534%2C-73.9857">
+            </iframe>
+            <p class="map-helper"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>Enable location access or enter your city below for local results</p>
+            <div class="location-input-row">
+              <input type="text" id="locationInput" placeholder="Enter your city, e.g. New York">
+              <button class="btn-primary" id="searchLocationBtn">Search</button>
+            </div>
+          </div>
+          <div class="nearby-list" id="nearbyList">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+
+    <!-- ========== COMMUNITY ========== -->
+    <section class="page" id="page-community">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              style="margin-right: 8px; vertical-align: bottom;">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>Community & Guilds</h1>
+          <p class="page-subtitle">Connect with friends, join guilds, and conquer roadmap challenges together</p>
+        </div>
+        <button class="btn-primary" id="addFriendBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Add Friend
+        </button>
+      </div>
+
+      <div class="community-tabs" style="display: flex; gap: 1rem; margin-bottom: 24px; overflow-x: auto;">
+        <button class="blog-tab active" data-tab="friends" id="tabFriends">Friends</button>
+        <button class="blog-tab" data-tab="guilds" id="tabGuilds">Guilds</button>
+      </div>
+
+      <!-- Friends Section -->
+      <div id="communityFriends" style="display: block;">
+        <div class="glass-card">
+          <div class="chart-header">
+            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>Your Friends List</h3>
+            <span class="chart-badge">5 Online</span>
+          </div>
+          <div class="friends-list" id="friendsList"
+            style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Guilds Section -->
+      <div id="communityGuilds" style="display: none;">
+        <div class="glass-card" style="margin-bottom: 24px;">
+          <div class="chart-header">
+            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                <path d="M12 2l8 4v6c0 5.55-3.84 10.74-8 12-4.16-1.26-8-6.45-8-12V6l8-4z"></path>
+              </svg>Your Guilds</h3>
+            <span class="chart-badge">3 Guilds</span>
+          </div>
+          <div class="guilds-list" id="guildsList" style="margin-top: 16px;">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <div class="glass-card guild-chat-card">
+          <div class="chart-header">
+            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>Guild Chat: <span id="activeGuildName">Iron Lifters</span></h3>
+            <span class="chart-badge ai-badge">12 Members Online</span>
+          </div>
+          <div class="guild-chat-window" id="guildChatWindow"
+            style="height: 300px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 16px; margin-top: 16px; display: flex; flex-direction: column; gap: 12px;">
+            <!-- Rendered via JS -->
+          </div>
+          <div class="guild-chat-input" style="display: flex; gap: 12px; margin-top: 16px;">
+            <input type="text" id="guildMessageInput" placeholder="Message your guild..."
+              style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff;">
+            <button class="btn-primary" id="sendGuildMessageBtn">Send</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Meal Detail Modal -->
+  <div class="modal-overlay" id="mealModal">
+    <div class="modal-content glass-card">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-body" id="modalBody">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Pantry Item Modal -->
+  <div class="modal-overlay" id="addItemModal">
+    <div class="modal-content glass-card modal-small">
+      <button class="modal-close" id="addItemClose">✕</button>
+      <h3>Add Pantry Item</h3>
+      <form id="addItemForm">
+        <div class="form-group">
+          <label>Item Name</label>
+          <input type="text" id="itemName" placeholder="e.g., Chicken Breast" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Quantity</label>
+            <input type="text" id="itemQty" placeholder="e.g., 500g" required>
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="itemCat">
+              <option value="protein">Protein</option>
+              <option value="produce">Produce</option>
+              <option value="grains">Grains</option>
+              <option value="dairy">Dairy</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="date" id="itemExpiry">
+        </div>
+        <button type="submit" class="btn-primary btn-wide">Add to Pantry</button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Notification Panel -->
+  <div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+      <h3>Notifications</h3>
+      <button class="notif-clear" id="notifClear">Clear All</button>
+    </div>
+    <div class="notif-list">
+      <div class="notif-item unread">
+        <div class="notif-dot"></div>
+        <div class="notif-content">
+          <strong>Meal Reminder</strong>
+          <p>Time for your post-workout protein shake! Your body needs recovery fuel.</p>
+          <span class="notif-time">5 min ago</span>
+        </div>
+      </div>
+      <div class="notif-item unread">
+        <div class="notif-dot"></div>
+        <div class="notif-content">
+          <strong>Pantry Alert</strong>
+          <p>Greek Yogurt expires tomorrow. Consider using it in tonight's dinner.</p>
+          <span class="notif-time">1 hour ago</span>
+        </div>
+      </div>
+      <div class="notif-item unread">
+        <div class="notif-dot"></div>
+        <div class="notif-content">
+          <strong>Weekly Report Ready</strong>
+          <p>Your metabolic score improved by 5 points this week! View full report.</p>
+          <span class="notif-time">3 hours ago</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Devices Modal -->
+  <div class="modal-overlay" id="devicesModalOverlay">
+    <div class="modal-content glass-card modal-small" style="text-align: left;">
+      <button class="modal-close" id="devicesCloseBtn">✕</button>
+      <div class="chart-header">
+        <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: bottom;">
+            <path d="M6.5 6.5l11 11L12 23V1l5.5 5.5-11 11"></path>
+          </svg>Connected Devices</h3>
+        <span class="chart-badge device-count-badge" id="modalDeviceCountBadge">0 linked</span>
+      </div>
+      <div class="device-list" id="modalDeviceList">
+        <!-- Populated by JS -->
+      </div>
+      <button class="btn-primary" id="modalScanDevicesBtn" style="margin-top:12px;width:100%;justify-content:center;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6.5 6.5l11 11L12 23V1l5.5 5.5-11 11"></path>
+        </svg>
+        Scan for Nearby Devices
+      </button>
+      <div class="device-scan-results" id="modalDeviceScanResults" style="display:none;">
+        <div class="scan-progress" id="modalScanProgress">
+          <div class="scan-pulse-ring"></div>
+          <span>Scanning for nearby devices...</span>
+        </div>
+        <div class="discovered-devices" id="modalDiscoveredDevices"></div>
+      </div>
+      <div class="bt-status connected" id="modalBtStatus" style="margin-top:10px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;flex-shrink:0;">
+          <path d="M6.5 6.5l11 11L12 23V1l5.5 5.5-11 11"></path>
+        </svg>
+        <span id="modalBtStatusText">Ready to scan</span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
