@@ -41,9 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
              name: user.displayName || 'NutriJJ User'
           })
         });
-      } catch (error) {
+      } catch (error: any) {
         console.error("Google Sign-in error:", error);
-        alert("Sign in failed. Please ensure pop-ups are allowed.");
+        alert("Sign in failed: " + error.message);
       }
     });
   }
