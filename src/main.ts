@@ -1,11 +1,71 @@
 import './style.css';
 import { Chart, registerables } from 'chart.js';
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
+
 Chart.register(...registerables);
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCw-jkAQzOPJuGVi0GLw_XuaIwnWIFGyyY",
+  authDomain: "nutrijj-a17fe.firebaseapp.com",
+  projectId: "nutrijj-a17fe",
+  storageBucket: "nutrijj-a17fe.firebasestorage.app",
+  messagingSenderId: "1081549637523",
+  appId: "1:1081549637523:web:437a406c2f032fd3f84a66",
+  measurementId: "G-35T1DEJ3K4"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
 // ===== API & STATE =====
 const API_BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/v1` : 'http://localhost:8000/api/v1';
-const CURRENT_USER_ID = localStorage.getItem('nutrijj_user_id') || 'usr_' + Math.random().toString(36).substring(2, 9);
+export let CURRENT_USER_ID = localStorage.getItem('nutrijj_user_id') || 'usr_' + Math.random().toString(36).substring(2, 9);
 localStorage.setItem('nutrijj_user_id', CURRENT_USER_ID);
+
+document.addEventListener("DOMContentLoaded", () => {
+  const googleBtn = document.getElementById("googleSignInBtn");
+  if(googleBtn) {
+    googleBtn.addEventListener("click", async () => {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        
+        await fetch(`${API_BASE}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+             uid: user.uid,
+             email: user.email || '',
+             name: user.displayName || 'NutriJJ User'
+          })
+        });
+      } catch (error) {
+        console.error("Google Sign-in error:", error);
+        alert("Sign in failed. Please ensure pop-ups are allowed.");
+      }
+    });
+  }
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      CURRENT_USER_ID = user.uid;
+      localStorage.setItem('nutrijj_user_id', CURRENT_USER_ID);
+      document.getElementById('authScreen')?.classList.add('hidden');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.style.display = 'flex';
+      const mc = document.getElementById('mainContent');
+      if (mc) mc.style.display = 'flex';
+    } else {
+      document.getElementById('authScreen')?.classList.remove('hidden');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.style.display = 'none';
+      const mc = document.getElementById('mainContent');
+      if (mc) mc.style.display = 'none';
+    }
+  });
+});
 
 let currentParty: any = null;
 let partyPollingInterval: any = null;

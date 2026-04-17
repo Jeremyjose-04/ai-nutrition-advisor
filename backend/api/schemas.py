@@ -66,3 +66,12 @@ class PartyInfo(BaseModel):
 
     class Config:
         from_attributes = True
+
+class UserLoginRequest(BaseModel):
+    uid: str
+    email: str
+    name: str
+
+class UserLoginResponse(BaseModel):
+    status: str
+    uid: str

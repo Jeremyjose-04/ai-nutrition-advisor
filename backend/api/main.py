@@ -28,6 +28,23 @@ app.add_middleware(
 # Instantiate the Agent globally to retain context if we use Redis memory
 agent = create_nutrition_agent()
 
+@app.post("/api/v1/auth/login", response_model=schemas.UserLoginResponse)
+async def login_user(req: schemas.UserLoginRequest, db: Session = Depends(get_db)):
+    """
+    Called by the frontend after Firebase Google Sign-In.
+    Upserts the user into the database securely.
+    """
+    user = db.query(models.User).filter(models.User.id == req.uid).first()
+    if not user:
+        user = models.User(id=req.uid, name=req.name)
+        db.add(user)
+        db.commit()
+    else:
+        user.name = req.name # Update name if changed
+        db.commit()
+    
+    return {"status": "success", "uid": req.uid}
+
 @app.post("/api/v1/recommend", response_model=schemas.StructuredNutritionResponse)
 async def generate_recommendations(req: schemas.RecommendationRequest):
     """
