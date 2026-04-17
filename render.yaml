@@ -19,5 +19,4 @@ services:
         fromService:
           type: web
           name: ai-nutrition-backend
-          envVarKey: RENDER_EXTERNAL_URL
-          property: connectionString
+          property: hostport
